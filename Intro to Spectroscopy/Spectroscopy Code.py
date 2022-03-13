@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[8]:
-
-
 #imports
 import numpy as np
 import matplotlib as mpl
@@ -11,9 +8,6 @@ import matplotlib.pyplot as plt
 import scipy.constants as sc
 from scipy.optimize import curve_fit as cf
 from astropy.io import fits
-
-
-# In[9]:
 
 
 #Changing the look of plots
@@ -30,15 +24,9 @@ green = '#2ffa7d'
 blue = '#34bdf7'
 
 
-# In[10]:
-
-
 # Importing data
 Bb = np.loadtxt('Group_I_BB.dat') # Blackbody data
 neon = np.loadtxt('Ne_calib.dat') # Neon calibration data
-
-
-# In[11]:
 
 
 # Wavelengths of bright neon lines (from lab document) (Q1)
@@ -49,9 +37,6 @@ wavelengths = np.array([
     692.947, 703.241, 717.394, 724.512, 743.890, 747.244, 748.887, 753.577,
     754.404
     ])
-
-
-# In[160]:
 
 
 # Plotting the blackbody spectrum
@@ -69,9 +54,6 @@ plt.plot(neon, color = blue)
 plt.title('Intensity of Neon vs Pixel Position')
 plt.xlabel('Pixel Position')
 plt.ylabel('Intensity')
-
-
-# In[158]:
 
 
 #Identifying centroids (Q2)
@@ -112,9 +94,6 @@ plt.ylabel('Intensity')
 plt.legend()
 
 
-# In[28]:
-
-
 #Obtaining least square fitting (Q3)
 
 # Function to fit
@@ -152,14 +131,6 @@ plt.legend()
 
 plt.savefig("pre_least_square_fitting.png")
 
-# # lab method vs curve_fit
-# print(mfit, popt[0])
-# print(cfit, popt[1])
-
-
-# In[157]:
-
-
 #Applying the wavelength solution (Q4)
 
 xs = range(len(BB)) # Range of pixel positions (0 - 1024)
@@ -195,18 +166,12 @@ first_error = np.sqrt((peak_index[0]*slope_error)**2 + intercept_error**2) * 1.e
 second_error = (first_error/(peak_wavelength * 1.e-9))*temp
 
 
-# In[29]:
-
-
 #Part 2
 #Loading in the data
 
 near_inf = fits.open("Near-Infrared.fits")
 new_data = near_inf[0].data
 r_data = new_data[0]
-
-
-# In[30]:
 
 
 plt.imshow(r_data, aspect='auto', cmap='gray', vmax=50000)
@@ -216,18 +181,12 @@ plt.xlabel("Spatial Direction")
 plt.ylabel("Spectral Direction")
 
 
-# In[31]:
-
-
 #Question 1
 
 oh_lines = np.array([16128.608, 16194.615, 16235.376, 16317.161, 16530.650, 16360.385, 
                      16388.492, 16442.155, 16475.648, 16502.365, 16692.380])
 
 print(len(oh_lines))
-
-
-# In[110]:
 
 
 #Question 2
@@ -265,9 +224,6 @@ plt.title("Spectrum of OH Telluric Sky Lines with Peaks")
 plt.savefig("spectrum_peaks.png")
 
 
-# In[171]:
-
-
 def cubic(x, a, b, c, d):
     return a*(x**3) + b*(x**2) + c*x + d
 
@@ -277,6 +233,7 @@ plt.xlabel("Y-Axis Pixels")
 plt.ylabel("OH Lines Wavelengths")
 plt.title("Peak Positions vs. OH Wavelengths")
 plt.savefig("unfit_OH.png")
+
 #Two-Dimensional Curve Fit
 
 c1, c2 = cf(cubic, pixelnum[2:], oh_lines)
@@ -291,10 +248,6 @@ plt.xlabel("Y-Axis Pixels")
 plt.ylabel("OH Line Wavelengths")
 plt.plot(pixelnum[2:], cubic(pixelnum[2:], c1[0], c1[1], c1[2], c1[3]), '-', color='red', label='Curve Fitting')
 plt.savefig("fit_OH.png")
-
-
-# In[169]:
-
 
 #Question 3
 
@@ -315,10 +268,3 @@ Delta = estimate*1.e-10 - intrin_wave
 print("The estimated wavelength of the [Fe II] emission is:", round(estimate, 3))
 
 print("The velocity of the gas is:", abs(((Delta / intrinsic) * (3.e8)) / 1000), "km/s")
-
-
-# In[ ]:
-
-
-
-
